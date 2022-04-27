@@ -80,8 +80,39 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"title\":\"Viaje a Italia\",\n    \"class\":\"travel\",\n    \"location\": \"Italy\",\n    \"abstract\":\"un breve viaje por la Toscana\",\n    \"content\":\"lorem ipsum\",\n    \"photo\": \"url of the photo\"\n}",
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Viaje a Italia",
+									"type": "default"
+								},
+								{
+									"key": "class",
+									"value": "Travel",
+									"type": "default"
+								},
+								{
+									"key": "location",
+									"value": "Italy",
+									"type": "default"
+								},
+								{
+									"key": "abstract",
+									"value": "Un breve viaje por la toscana",
+									"type": "default"
+								},
+								{
+									"key": "content",
+									"value": "lorem ipsum",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/manoel/Descargas/portrait_result.gif"
+								}
+							],
 							"options": {
 								"raw": {
 									"language": "json"
