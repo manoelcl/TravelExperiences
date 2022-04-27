@@ -1,6 +1,6 @@
 #Travel Experiences
 
-1. Base de datos
+1. Database structure
 
 User
 
@@ -47,39 +47,39 @@ PUBLIC (authentication not required)
 
 – GET /recommendations
 – Get a list of recommendations filtered and ordered by the following query params
-– Query params: – location: filter by location – class: filter by class – orderByVotes: orden
-– Return: info about the recommendations
+– Query params: – location: filter by location – class: filter by class – orderByVotes: order by average rating
+– Return: a list of recommendations following the query params
 
 – GET /recommendations/:idRecommendation
 – Get the whole recommendation by id
 – Path params: – idEntry: el id del artículo
-– Retorna: información completa de un artículo
+– Return: the whole recommendation identified with the path param
 
 – POST /users/login
 – User login
-– Body:
-– Retorna: un token (JWT – Json Web Token)
+– Body: – username, –password
+– Return: JWT for the authenticated user
 
 – POST /users
-– Crear un usuario pendiente de activación
-– Body: – email: correo electrónico – password: contraseña – name: nombre del usuario
-– Retorna: mensaje que indica si el usuario se ha creado correctamente y que tiene que activarse
+– Create new user
+– Body: – email – password – username – role
+– Return: confirmation user registered
 
 PRIVATE (authentication required)
 
-– POST /recommendation
+– POST /recommendations
 – Create a recommendation
-– Body: – title: título del artículo – description: contenido del artículo
-– Retorna: mensaje que indica si el artículo se ha creado correctamente y su URL
+– Body:– title – class – location – abstract – content – photo
+– Return: url and confirmation
 
-– POST /recommendation/:idRecommendation/vote
+– POST /recommendations/:idRecommendation/vote
 – Vote for a recommendation
-– Body: – title: título del artículo – content: contenido del artículo
-– Retorna: mensaje que indica si el artículo se ha creado correctamente y su URL
+– Query params: – rating
+– Return: confirmation of the vote
 
-– POST /recommendation/:idRecommendation/comment
+– POST /recommendations/:idRecommendation/comment
 – Write a comment for a recommendation
-– Body: – title: título del artículo – content: contenido del artículo
-– Retorna: mensaje que indica si el artículo se ha creado correctamente y su URL
+– Body: – content
+– Return: url and confirmation
 
-– DELETE /recommendation/:idRecommendation
+– DELETE /recommendations/:idRecommendation
