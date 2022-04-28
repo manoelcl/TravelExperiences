@@ -56,3 +56,35 @@ VALUES ("pepe@pepe.com", "pepepe", "pepemola", "admin"),
     ("pep1424e@pepe.com", "pepe92pe", "pepe1232mola", "user"),
     ("peasdsape@pepe.com", "pepe28442pe", "l337", "user"),
     ("tobias@pepe.com", "tob32918i", "tobias69", "admin"); 
+
+INSERT INTO recommendation (id_user, title, class, location, abstract, content, photo) VALUES
+(1, "Viaje a Italia", "travel", "Italy", "un viaje rápido por la toscana", "lorem ipsum","direccion foto"),
+(1, "Baños termales", "experience", "Italy", "un balneario perdido en la toscana", "lorem ipsum","direccion foto"),
+(2, "Viaje a Rusia", "travel", "Russia", "un viaje por Moscú", "lorem ipsum","direccion foto"),
+(3, "Otro Viaje genérico a Italia", "travel", "Italy", "un viaje genérico por nápoles", "lorem ipsum","direccion foto"),
+(3, "Viñedos de Francia", "experience", "France", "Descubre el vino del Loira", "lorem ipsum","direccion foto"),
+(4, "Viaje a Portutal", "travel", "Portugal", "un viaje rápido por el algarve", "lorem ipsum","direccion foto")
+;
+
+INSERT INTO vote (id_user, id_recommendation, rating) VALUES
+(2, 1, 5),
+(3,1,4),
+(4,1,1),
+(1,3,5),
+(3,3,4),
+(4,3,3),
+(1,5,5),
+(2,5,5),
+(4,5,5)
+;
+
+SELECT r.title, r.abstract FROM recommendation r JOIN vote v WHERE location=? AND class=? ORDER BY (SELECT)
+
+SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average
+FROM recommendation r JOIN vote v ON r.id=v.id_recommendation
+GROUP BY r.id ORDER BY average DESC;
+
+SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average
+FROM recommendation r JOIN vote v ON r.id=v.id_recommendation
+WHERE r.location="Russia" AND r.class="travel"
+GROUP BY r.id ORDER BY average DESC;

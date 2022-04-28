@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const express = require("express");
 
 const { authUser } = require("./middlewares/auth");
+const { createUserController } = require("./controllers/user");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,17 +15,31 @@ app.use(morgan("dev"));
 
 //Rutas de User
 
-app.post("/user", createUserController);
-app.post("/login", loginUserController);
+app.post("/users", createUserController);
+app.post("/users/login", loginUserController);
 
 //Rutas de Recommendations
 
-app.get("/recommendations/:location/:class", listRecommendationsController);
+app.get("/recommendations", listRecommendationsController);
 app.get("/recommendations/:id", getRecommendationController);
-app.post("/", authUser, postRecommendationController);
-app.post("/recommendations/:id", commentRecommendationController);
-app.post("/recommendations/:id", voteRecommendationController);
-app.delete("/recommendations/id", deleteRecommendationController);
+
+//Private paths
+app.post("/recommendations", authUser, postRecommendationController);
+app.post(
+  "/recommendations/:idRecommendation/comment",
+  authUser,
+  commentRecommendationController
+);
+app.post(
+  "/recommendations/:idRecommendation/vote",
+  authUser,
+  voteRecommendationController
+);
+app.delete(
+  "/recommendations/:idRecommendation",
+  authUser,
+  deleteRecommendationController
+);
 
 //Middleware 404
 app.use((req, res) => {
