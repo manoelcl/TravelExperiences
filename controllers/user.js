@@ -1,5 +1,5 @@
 const { generateError } = require("../helpers");
-const { createUser, getUserByEmail } = require("../db");
+const { createUser, getUserByEmail } = require("../db/db");
 
 //CREATE USER
 const createUserController = async (req, res, next) => {
@@ -61,4 +61,9 @@ const loginUserController = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  createUserController,
+  loginUserController,
 };

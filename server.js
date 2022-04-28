@@ -5,7 +5,18 @@ const morgan = require("morgan");
 const express = require("express");
 
 const { authUser } = require("./middlewares/auth");
-const { createUserController } = require("./controllers/user");
+const {
+  createUserController,
+  loginUserController,
+} = require("./controllers/user");
+const {
+  getRecommendationController,
+  listRecommendationsController,
+  postRecommendationController,
+  commentRecommendationController,
+  voteRecommendationController,
+  deleteRecommendationController,
+} = require("./controllers/recommendations");
 
 const app = express();
 const port = process.env.PORT || 3000;

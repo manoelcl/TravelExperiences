@@ -1,4 +1,4 @@
-const { getRecommendationbyID } = require("../db");
+const { getRecommendationbyID } = require("../db/db");
 
 //ALL RECOMMENDATIONS
 const listRecommendationsController = async (req, res, next) => {
@@ -70,4 +70,13 @@ const deleteRecommendationController = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  listRecommendationsController,
+  getRecommendationController,
+  postRecommendationController,
+  voteRecommendationController,
+  commentRecommendationController,
+  deleteRecommendationController,
 };
