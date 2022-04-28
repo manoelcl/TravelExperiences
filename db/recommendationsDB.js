@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const { generateError } = require("../helpers");
 const { getConnection } = require("./db");
 
@@ -11,9 +11,7 @@ const getRecommendationByID = async (id) => {
     connection = await getConnection();
 
     const [result] = await connection.query(
-      `
-SELECT id, id_user, tittle, class, location, abstract, content, photo, creation_date FROM recommendations WHERE id=?
-`,
+      `SELECT * FROM recommendation WHERE id=?`,
       [id]
     );
 
@@ -22,6 +20,42 @@ SELECT id, id_user, tittle, class, location, abstract, content, photo, creation_
     }
 
     return result[0];
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+const listRecommendations = async (location, classId, order) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average
+      FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
+    if (location && classId) {
+      queryString =
+        queryString +
+        ` WHERE r.location="${location}" AND r.class="${classId}"`;
+    } else {
+      if (location) {
+        queryString = queryString + ` WHERE r.location="${location}"`;
+      } else if (classId) {
+        queryString = queryString + ` WHERE r.class="${classId}"`;
+      }
+    }
+    queryString = queryString + ` GROUP BY r.id`;
+    if (order) {
+      queryString = queryString + ` ORDER BY average ${order.toUpperCase()}`;
+    }
+
+    const [result] = await connection.query(queryString);
+    console.log(queryString);
+    if (result.length === 0) {
+      throw generateError(" No hay ninguna recommendations con esa id", 404);
+    }
+
+    return result;
   } finally {
     if (connection) connection.release();
   }
@@ -43,7 +77,7 @@ const postRecommendation = async (
     connection = await getConnection();
     const [result] = await connection.query(
       `
-    INSERT INTO recommendations (tittle, class, location, abstract, content, image ='') 
+    INSERT INTO recommendation (tittle, class, location, abstract, content, image ='') 
     VALUES (?,?,?,?,?,?)
     `,
       [tittle, clase, location, abstract, content, image]
@@ -54,7 +88,8 @@ const postRecommendation = async (
   }
 };
 
-module.export = {
+module.exports = {
   getRecommendationByID,
+  listRecommendations,
   postRecommendation,
 };

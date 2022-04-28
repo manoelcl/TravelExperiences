@@ -14,7 +14,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/recommendations?location=moscow&class=experience&order=desc",
+							"raw": "localhost:3000/recommendations?location=Russia&classId=travel&order=desc",
 							"host": [
 								"localhost"
 							],
@@ -25,12 +25,12 @@
 							"query": [
 								{
 									"key": "location",
-									"value": "moscow",
+									"value": "Russia",
 									"description": "Show recommendations for a given location"
 								},
 								{
-									"key": "class",
-									"value": "experience",
+									"key": "classId",
+									"value": "travel",
 									"description": "Show recommendations by class"
 								},
 								{
@@ -61,7 +61,7 @@
 							"variable": [
 								{
 									"key": "idRecommendation",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
@@ -84,7 +84,7 @@
 							"formdata": [
 								{
 									"key": "title",
-									"value": "Viaje a Italia",
+									"value": "Viaje a Monaco",
 									"type": "default"
 								},
 								{
@@ -94,12 +94,12 @@
 								},
 								{
 									"key": "location",
-									"value": "Italy",
+									"value": "Monaco",
 									"type": "default"
 								},
 								{
 									"key": "abstract",
-									"value": "Un breve viaje por la toscana",
+									"value": "Un viaje lujoso en la ciudad de Monaco",
 									"type": "default"
 								},
 								{

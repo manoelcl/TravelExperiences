@@ -1,13 +1,24 @@
-const { getRecommendationbyID } = require("../db/db");
+//const { generateError } = require("../helpers");
+const {
+  getRecommendationByID,
+  listRecommendations,
+} = require("../db/recommendationsDB");
 
 //ALL RECOMMENDATIONS
 const listRecommendationsController = async (req, res, next) => {
   try {
     // Dos parametros en la misma busqueda
-    const [location] = req.params;
+    const { location, classId, order } = req.query;
+
+    const recommendationsList = await listRecommendations(
+      location,
+      classId,
+      order
+    );
+
     res.send({
-      status: "error",
-      message: "Not implemented",
+      status: "ok",
+      message: recommendationsList,
     });
   } catch (error) {
     next(error);
@@ -16,12 +27,12 @@ const listRecommendationsController = async (req, res, next) => {
 //SINGLE RECOMMENDATION - Hecho
 const getRecommendationController = async (req, res, next) => {
   try {
-    const [id] = req.params;
+    const { id } = req.params;
 
-    const recomendation = await getRecommendationbyID(id);
+    const recommendation = await getRecommendationByID(id);
     res.send({
       status: "ok",
-      message: "Recommendation",
+      message: recommendation,
     });
   } catch (error) {
     next(error);
