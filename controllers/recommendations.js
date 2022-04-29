@@ -1,7 +1,10 @@
-//const { generateError } = require("../helpers");
+const { generateError } = require("../helpers");
 const {
   getRecommendationByID,
   listRecommendations,
+  postRecommendation,
+  voteRecommendation,
+  commentRecommendation,
 } = require("../db/recommendationsDB");
 
 //ALL RECOMMENDATIONS
@@ -43,9 +46,23 @@ const getRecommendationController = async (req, res, next) => {
 //CREATE RECOMMENDATION - Login necesario
 const postRecommendationController = async (req, res, next) => {
   try {
+    const { title, clase, location, abstract, content, photo } = req.body;
+
+    const idRecommendation = await postRecommendation(
+      req.auth.id,
+      title,
+      clase,
+      location,
+      abstract,
+      content,
+      photo
+    );
+
+    res.statusCode = 201;
+    res.setHeader("Content-Location", `/entries/${idRecommendation}`);
     res.send({
       status: "ok",
-      message: "Recommendation Create",
+      message: "Entrada creada correctamente.",
     });
   } catch (error) {
     next(error);
@@ -55,10 +72,10 @@ const postRecommendationController = async (req, res, next) => {
 //CREATE COMMENT
 const commentRecommendationController = async (req, res, next) => {
   try {
-    res.send({
-      status: "error",
-      message: "Not implemented",
-    });
+    try {
+    } catch (error) {
+      next(error);
+    }
   } catch (error) {
     next(error);
   }
@@ -67,9 +84,14 @@ const commentRecommendationController = async (req, res, next) => {
 //VOTE RECOMMENDATION
 const voteRecommendationController = async (req, res, next) => {
   try {
+    const { idRecommendation } = req.params;
+    const { rating } = req.query;
+    const idUser = req.auth.id;
+    console.log(idRecommendation, rating, idUser);
+    const [vote] = voteRecommendation(idUser, idRecommendation, rating);
     res.send({
-      status: "error",
-      message: "Not implemented",
+      status: "ok",
+      message: vote,
     });
   } catch (error) {
     next(error);

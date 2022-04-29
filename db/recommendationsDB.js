@@ -71,32 +71,49 @@ const listRecommendations = async (location, classId, order) => {
 //Creamos una recomendacion
 
 const postRecommendation = async (
-  tittle,
+  id_user,
+  title,
   clase,
   location,
   abstract,
   content,
-  image = ""
+  photo = ""
 ) => {
   let connection;
 
   try {
     connection = await getConnection();
     const [result] = await connection.query(
-      `
-    INSERT INTO recommendation (tittle, class, location, abstract, content, image ='') 
-    VALUES (?,?,?,?,?,?)
-    `,
-      [tittle, clase, location, abstract, content, image]
+      `INSERT INTO recommendation (id_user, title, class, location, abstract, content, photo) VALUES (?,?,?,?,?,?,?)`,
+      [id_user, title, clase, location, abstract, content, photo]
     );
-    return result.insertRecommendation;
+    return result.insertId;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+const voteRecommendation = async (idUser, idRecommendation, rating) => {
+  try {
+    connection = await getConnection();
+    console.log(idUser);
+    const [result] = await connection.query(
+      `INSERT INTO vote (id_user, id_recommendation, rating) VALUES (?,?,?)`,
+      [idUser, idRecommendation, rating]
+    );
+    return result.insertId;
+  } catch (err) {
+    throw err;
   } finally {
     if (connection) connection.release();
   }
 };
 
+const commentRecommendation = async () => {};
+
 module.exports = {
   getRecommendationByID,
   listRecommendations,
   postRecommendation,
+  voteRecommendation,
+  commentRecommendation,
 };
