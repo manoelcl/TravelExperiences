@@ -1,18 +1,21 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const { generateError } = require("../helpers");
-const { createUser, getUserByEmail } = require("../db/db");
+const { createUser, getUserByEmail } = require("../db/userDB");
+const {
+  loginUserSchema,
+  createUserSchema,
+} = require("../validators/userValidators");
 
 //CREATE USER
 const createUserController = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    await createUserSchema.validateAsync(req.body);
 
-    // Sustituir por JOI
+    const { email, password, username, role } = req.body;
 
-    if (!email || !password) {
-      throw generateError("Rellena los campos correctamente", 400);
-    }
-
-    const id = await createUser(email, password);
+    const id = await createUser(email, password, username, role);
 
     res.send({
       status: "ok",
@@ -26,10 +29,12 @@ const createUserController = async (req, res, next) => {
 //LOGIN USER
 const loginUserController = async (req, res, next) => {
   try {
+    await loginUserSchema.validateAsync(req.body);
+
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw generateError("Rellena los campos correctamente,400");
+      throw generateError("Rellena los campos correctamente", 400);
     }
 
     //Recojo los datos del usuario
@@ -37,7 +42,7 @@ const loginUserController = async (req, res, next) => {
     const user = await getUserByEmail(email);
 
     //Compruebo que coinciden password
-
+    console.log(bcrypt.hashSync(password, 8));
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
@@ -46,17 +51,18 @@ const loginUserController = async (req, res, next) => {
 
     //Payload del token
 
-    const payload = { id: user.id };
+    const payload = { id: user.id, role: user.role };
 
     //Firmo el token
 
-    const toke = jwt.sign(payload, process.env.SECRET, {
-      expiresIN: "1d",
+    const token = jwt.sign(payload, process.env.SECRET, {
+      expiresIn: "1d",
     });
-
     res.send({
-      status: "error",
-      message: "Not implemented",
+      status: "ok",
+      data: {
+        token,
+      },
     });
   } catch (error) {
     next(error);

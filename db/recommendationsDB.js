@@ -1,4 +1,4 @@
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const { generateError } = require("../helpers");
 const { getConnection } = require("./db");
 
@@ -31,28 +31,35 @@ const listRecommendations = async (location, classId, order) => {
   try {
     connection = await getConnection();
 
-    let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average
-      FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
+    let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
+    let queryArray = [];
     if (location && classId) {
-      queryString =
-        queryString +
-        ` WHERE r.location="${location}" AND r.class="${classId}"`;
+      queryString = queryString + ` WHERE r.location=? AND r.class=?`;
+      queryArray.push(location, classId);
     } else {
       if (location) {
-        queryString = queryString + ` WHERE r.location="${location}"`;
+        queryString = queryString + ` WHERE r.location=?`;
+        queryArray.push(location);
       } else if (classId) {
-        queryString = queryString + ` WHERE r.class="${classId}"`;
+        queryString = queryString + ` WHERE r.class=?`;
+        queryArray.push(classId);
       }
     }
+
     queryString = queryString + ` GROUP BY r.id`;
+
     if (order) {
-      queryString = queryString + ` ORDER BY average ${order.toUpperCase()}`;
+      if (order.toUpperCase() === "ASC") {
+        queryString = queryString + ` ORDER BY average ASC`;
+      } else {
+        queryString = queryString + ` ORDER BY average DESC`;
+      }
     }
 
-    const [result] = await connection.query(queryString);
-    console.log(queryString);
+    const [result] = await connection.query(queryString, queryArray);
+
     if (result.length === 0) {
-      throw generateError(" No hay ninguna recommendations con esa id", 404);
+      throw generateError("No hay ninguna recommendations con esa id", 404);
     }
 
     return result;
@@ -64,32 +71,49 @@ const listRecommendations = async (location, classId, order) => {
 //Creamos una recomendacion
 
 const postRecommendation = async (
-  tittle,
+  id_user,
+  title,
   clase,
   location,
   abstract,
   content,
-  image = ""
+  photo = ""
 ) => {
   let connection;
 
   try {
     connection = await getConnection();
     const [result] = await connection.query(
-      `
-    INSERT INTO recommendation (tittle, class, location, abstract, content, image ='') 
-    VALUES (?,?,?,?,?,?)
-    `,
-      [tittle, clase, location, abstract, content, image]
+      `INSERT INTO recommendation (id_user, title, class, location, abstract, content, photo) VALUES (?,?,?,?,?,?,?)`,
+      [id_user, title, clase, location, abstract, content, photo]
     );
-    return result.insertRecommendation;
+    return result.insertId;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+const voteRecommendation = async (idUser, idRecommendation, rating) => {
+  try {
+    connection = await getConnection();
+    console.log(idUser);
+    const [result] = await connection.query(
+      `INSERT INTO vote (id_user, id_recommendation, rating) VALUES (?,?,?)`,
+      [idUser, idRecommendation, rating]
+    );
+    return result.insertId;
+  } catch (err) {
+    throw err;
   } finally {
     if (connection) connection.release();
   }
 };
 
+const commentRecommendation = async () => {};
+
 module.exports = {
   getRecommendationByID,
   listRecommendations,
   postRecommendation,
+  voteRecommendation,
+  commentRecommendation,
 };

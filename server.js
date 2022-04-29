@@ -3,6 +3,7 @@ require("dotenv").config();
 const chalk = require("chalk");
 const morgan = require("morgan");
 const express = require("express");
+const fileUpload = require("express-fileupload");
 
 const { authUser } = require("./middlewares/auth");
 const {
@@ -17,11 +18,13 @@ const {
   voteRecommendationController,
   deleteRecommendationController,
 } = require("./controllers/recommendations");
+const { getUserByEmail } = require("./db/userDB");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(fileUpload());
 app.use(morgan("dev"));
 
 //Rutas de User
@@ -68,6 +71,11 @@ app.use((error, req, res, next) => {
     message: error.message,
   });
 });
+
+async function prueba() {
+  console.log(await getUserByEmail("pe2321pe@pepe.com"));
+}
+prueba();
 
 app.listen(3000, () => {
   console.log(chalk.green(`app listening in port 3000`));

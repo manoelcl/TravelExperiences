@@ -13,9 +13,9 @@ const authUser = (req, res, next) => {
     let token;
 
     try {
-      token = jwt.verify(authorization, process.env.SECRET);
+      token = jwt.verify(authorization.split(" ")[1], process.env.SECRET);
     } catch {
-      throw generateError("Token incorrecto", 401);
+      throw generateError("Invalid token or header format", 401);
     }
 
     //Metemos la información del token en la req para usarla en el controlador

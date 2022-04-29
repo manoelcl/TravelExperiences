@@ -52,7 +52,7 @@ CREATE TABLE vote(
 
 INSERT INTO user (email, password, username, role)
 VALUES ("pepe@pepe.com", "pepepe", "pepemola", "admin"),
-	("pe2321pe@pepe.com", "pep92epe", "pepemola2321", "user"),
+	("pe2321pe@pepe.com", "pep92epe"/*HASHEADA $2b$08$4vOk86RdBn0Ncfu77Fkwv.UEtfiTsCAZdhQtSMFOc5T6FxESPNL0q*/, "pepemola2321", "user"),
     ("pep1424e@pepe.com", "pepe92pe", "pepe1232mola", "user"),
     ("peasdsape@pepe.com", "pepe28442pe", "l337", "user"),
     ("tobias@pepe.com", "tob32918i", "tobias69", "admin"); 

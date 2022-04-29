@@ -10,7 +10,7 @@ const authenticateUser = (req, res, next) => {
     }
     let token;
     try {
-      token = jwt.verify(authorization.split(" ")[1], "SECRET");
+      token = jwt.verify(authorization.split(" ")[1], process.env.SECRET);
     } catch (err) {
       throw generateError("Invalid token or header format", 401);
     }
@@ -18,4 +18,8 @@ const authenticateUser = (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  authenticateUser,
 };
