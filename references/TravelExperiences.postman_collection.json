@@ -282,7 +282,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"prueba@prueba.com\",\n    \"password\":\"contraseña\"\n}",
+							"raw": "{\n    \"email\":\"pe2321pe@pepe.com\",\n    \"password\":\"pep92epe\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

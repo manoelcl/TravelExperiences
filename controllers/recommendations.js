@@ -24,6 +24,7 @@ const listRecommendationsController = async (req, res, next) => {
     next(error);
   }
 };
+
 //SINGLE RECOMMENDATION - Hecho
 const getRecommendationController = async (req, res, next) => {
   try {
@@ -38,6 +39,7 @@ const getRecommendationController = async (req, res, next) => {
     next(error);
   }
 };
+
 //CREATE RECOMMENDATION - Login necesario
 const postRecommendationController = async (req, res, next) => {
   try {
@@ -49,6 +51,7 @@ const postRecommendationController = async (req, res, next) => {
     next(error);
   }
 };
+
 //CREATE COMMENT
 const commentRecommendationController = async (req, res, next) => {
   try {
@@ -60,6 +63,7 @@ const commentRecommendationController = async (req, res, next) => {
     next(error);
   }
 };
+
 //VOTE RECOMMENDATION
 const voteRecommendationController = async (req, res, next) => {
   try {
@@ -71,6 +75,7 @@ const voteRecommendationController = async (req, res, next) => {
     next(error);
   }
 };
+
 //DELETE RECOMMENDATION
 const deleteRecommendationController = async (req, res, next) => {
   try {

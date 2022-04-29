@@ -32,29 +32,34 @@ const listRecommendations = async (location, classId, order) => {
     connection = await getConnection();
 
     let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
-
+    let queryArray = [];
     if (location && classId) {
-      queryString =
-        queryString +
-        ` WHERE r.location="${location}" AND r.class="${classId}"`;
+      queryString = queryString + ` WHERE r.location=? AND r.class=?`;
+      queryArray.push(location, classId);
     } else {
       if (location) {
-        queryString = queryString + ` WHERE r.location="${location}"`;
+        queryString = queryString + ` WHERE r.location=?`;
+        queryArray.push(location);
       } else if (classId) {
-        queryString = queryString + ` WHERE r.class="${classId}"`;
+        queryString = queryString + ` WHERE r.class=?`;
+        queryArray.push(classId);
       }
     }
 
     queryString = queryString + ` GROUP BY r.id`;
 
     if (order) {
-      queryString = queryString + ` ORDER BY average ${order.toUpperCase()}`;
+      if (order.toUpperCase() === "ASC") {
+        queryString = queryString + ` ORDER BY average ASC`;
+      } else {
+        queryString = queryString + ` ORDER BY average DESC`;
+      }
     }
 
-    const [result] = await connection.query(queryString);
+    const [result] = await connection.query(queryString, queryArray);
 
     if (result.length === 0) {
-      throw generateError(" No hay ninguna recommendations con esa id", 404);
+      throw generateError("No hay ninguna recommendations con esa id", 404);
     }
 
     return result;

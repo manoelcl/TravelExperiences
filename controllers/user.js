@@ -3,14 +3,19 @@ const jwt = require("jsonwebtoken");
 
 const { generateError } = require("../helpers");
 const { createUser, getUserByEmail } = require("../db/userDB");
-const { loginUserSchema } = require("../validators/userValidators");
+const {
+  loginUserSchema,
+  createUserSchema,
+} = require("../validators/userValidators");
 
 //CREATE USER
 const createUserController = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    await createUserSchema.validateAsync(req.body);
 
-    const id = await createUser(email, password);
+    const { email, password, username, role } = req.body;
+
+    const id = await createUser(email, password, username, role);
 
     res.send({
       status: "ok",

@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
+
 const { generateError } = require("../helpers");
 const { getConnection } = require("./db");
 
 //CREATE USER IN DATABASE ( REVISAR ROLE)
-const createUser = async (email, password, username) => {
+const createUser = async (email, password, username, role) => {
   let connection;
 
   try {
@@ -21,14 +22,14 @@ const createUser = async (email, password, username) => {
       throw generateError("Ese email ya esta registrado, 409");
     }
     //Encriptamos password
-    const passwordHash = await bcrypt.hash(password, 10);
-
+    const passwordHash = await bcrypt.hash(password, 8);
+    console.log(role);
     //Creamos el usuario
     const newUser = await connection.query(
       `
-    INSERT INTO users (email,password,username) VALUES (?,?,?)
+      INSERT INTO user (email, password, username, role) VALUES (?,?,?,?)
     `,
-      [email, password, username]
+      [email, passwordHash, username, role]
     );
     //Nos devuelve el id
     return newUser.insertId;

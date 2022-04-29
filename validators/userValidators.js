@@ -20,6 +20,10 @@ const createUserSchema = Joi.object().keys({
     .min(2)
     .required()
     .error(generateError("User name must be at least 2 characters long", 400)),
+  role: Joi.string()
+    .valid("admin", "user")
+    .default("user")
+    .error(generateError("Role must be a valid role", 400)),
 });
 
 const loginUserSchema = Joi.object().keys({
