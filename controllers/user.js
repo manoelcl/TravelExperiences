@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const { generateError } = require("../helpers");
 const { createUser, getUserByEmail } = require("../db/userDB");
 const { loginUserSchema } = require("../validators/userValidators");
@@ -6,12 +9,6 @@ const { loginUserSchema } = require("../validators/userValidators");
 const createUserController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    // Sustituir por JOI
-
-    if (!email || !password) {
-      throw generateError("Rellena los campos correctamente", 400);
-    }
 
     const id = await createUser(email, password);
 
@@ -32,7 +29,7 @@ const loginUserController = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw generateError("Rellena los campos correctamente,400");
+      throw generateError("Rellena los campos correctamente", 400);
     }
 
     //Recojo los datos del usuario
@@ -40,7 +37,7 @@ const loginUserController = async (req, res, next) => {
     const user = await getUserByEmail(email);
 
     //Compruebo que coinciden password
-
+    console.log(bcrypt.hashSync(password, 8));
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
@@ -49,7 +46,7 @@ const loginUserController = async (req, res, next) => {
 
     //Payload del token
 
-    const payload = { id: user.id, role: userData.role };
+    const payload = { id: user.id, role: user.role };
 
     //Firmo el token
 
