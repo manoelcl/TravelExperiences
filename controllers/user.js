@@ -1,5 +1,6 @@
 const { generateError } = require("../helpers");
-const { createUser, getUserByEmail } = require("../db/db");
+const { createUser, getUserByEmail } = require("../db/userDB");
+const { loginUserSchema } = require("../validators/userValidators");
 
 //CREATE USER
 const createUserController = async (req, res, next) => {
@@ -26,6 +27,8 @@ const createUserController = async (req, res, next) => {
 //LOGIN USER
 const loginUserController = async (req, res, next) => {
   try {
+    await loginUserSchema.validateAsync(req.body);
+
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -46,17 +49,18 @@ const loginUserController = async (req, res, next) => {
 
     //Payload del token
 
-    const payload = { id: user.id };
+    const payload = { id: user.id, role: userData.role };
 
     //Firmo el token
 
-    const toke = jwt.sign(payload, process.env.SECRET, {
-      expiresIN: "1d",
+    const token = jwt.sign(payload, process.env.SECRET, {
+      expiresIn: "1d",
     });
-
     res.send({
-      status: "error",
-      message: "Not implemented",
+      status: "ok",
+      data: {
+        token,
+      },
     });
   } catch (error) {
     next(error);

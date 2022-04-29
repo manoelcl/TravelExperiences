@@ -46,9 +46,7 @@ const getUserByEmail = async (email) => {
     connection = await getConnection();
 
     const [result] = await connection.query(
-      `
-      SELECT * FROM recommendations WHERE email=?
-  `,
+      `SELECT * FROM user WHERE email=?`,
       [email]
     );
 

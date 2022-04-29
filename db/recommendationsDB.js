@@ -1,4 +1,4 @@
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const { generateError } = require("../helpers");
 const { getConnection } = require("./db");
 
@@ -31,8 +31,8 @@ const listRecommendations = async (location, classId, order) => {
   try {
     connection = await getConnection();
 
-    let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average
-      FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
+    let queryString = `SELECT r.title, r.abstract, r.id, AVG(v.rating) AS average FROM recommendation r JOIN vote v ON r.id=v.id_recommendation`;
+
     if (location && classId) {
       queryString =
         queryString +
@@ -44,13 +44,15 @@ const listRecommendations = async (location, classId, order) => {
         queryString = queryString + ` WHERE r.class="${classId}"`;
       }
     }
+
     queryString = queryString + ` GROUP BY r.id`;
+
     if (order) {
       queryString = queryString + ` ORDER BY average ${order.toUpperCase()}`;
     }
 
     const [result] = await connection.query(queryString);
-    console.log(queryString);
+
     if (result.length === 0) {
       throw generateError(" No hay ninguna recommendations con esa id", 404);
     }
