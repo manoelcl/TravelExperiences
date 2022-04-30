@@ -6,10 +6,12 @@ const express = require("express");
 const fileUpload = require("express-fileupload");
 
 const { authUser } = require("./middlewares/auth");
+
 const {
   createUserController,
   loginUserController,
 } = require("./controllers/user");
+
 const {
   getRecommendationController,
   listRecommendationsController,
@@ -18,6 +20,7 @@ const {
   voteRecommendationController,
   deleteRecommendationController,
 } = require("./controllers/recommendations");
+
 const { getUserByEmail } = require("./db/userDB");
 
 const app = express();
@@ -72,11 +75,11 @@ app.use((error, req, res, next) => {
   });
 });
 
-async function prueba() {
-  console.log(await getUserByEmail("pe2321pe@pepe.com"));
-}
-prueba();
+// async function prueba() {
+//   console.log(await getUserByEmail("pe2321pe@pepe.com"));
+// }
+// prueba();
 
 app.listen(3000, () => {
-  console.log(chalk.green(`app listening in port 3000`));
+  console.log(chalk.green(`app listening in port ${port}`));
 });
