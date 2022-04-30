@@ -8,11 +8,10 @@ const recommendationSchema = Joi.object({
     .max(100)
     .required()
     .error(generateError("Recommendation must have a valid title", 400)),
-  class: Joi.string()
+  classId: Joi.string()
     .valid("travel", "experience")
-    .required.error(
-      generateError("Recommendation must have a valid class", 400)
-    ),
+    .required()
+    .error(generateError("Recommendation must have a valid class", 400)),
   location: Joi.string()
     .min(2)
     .max(100)
@@ -36,14 +35,14 @@ const recommendationVote = Joi.object({
     .min(0)
     .integer()
     .required()
-    .error("Vote must be an integer between 0 and 5", 400),
+    .error(generateError("Vote must be an integer between 0 and 5", 400)),
 });
 
 const recommendationComment = Joi.object({
   content: Joi.string()
     .max(300)
     .required()
-    .error("Text must be between 3 an 300 characters long", 400),
+    .error(generateError("Text must be between 3 an 300 characters long", 400)),
 });
 
 module.exports = {

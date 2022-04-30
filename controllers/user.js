@@ -15,6 +15,8 @@ const createUserController = async (req, res, next) => {
 
     const { email, password, username, role } = req.body;
 
+    password = bcrypt.hashSync(password, 8);
+
     const id = await createUser(email, password, username, role);
 
     res.send({

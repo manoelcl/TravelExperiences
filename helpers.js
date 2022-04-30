@@ -1,4 +1,7 @@
 const fs = require("fs/promises");
+const path = require("path");
+const sharp = require("sharp");
+const uuid = require("uuid");
 
 const generateError = (message, status) => {
   const error = new Error(message);
@@ -14,6 +17,25 @@ const createPathIfNotExists = async (path) => {
   }
 };
 
+const processImage = async (image) => {
+  const imgPath = path.join(__dirname, "images");
+  await createPathIfNotExists(imgPath);
+
+  const img = await sharp(image.data);
+
+  const imageInfo = await img.metadata();
+
+  if (imageInfo.width > 512) {
+    await img.resize(512);
+  }
+
+  const fileName = `${uuid.v4()}.jpg`;
+  await img.toFile(path.join(imgPath, fileName));
+
+  return fileName;
+};
+
 module.exports = {
   generateError,
+  processImage,
 };
