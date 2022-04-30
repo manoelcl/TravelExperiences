@@ -80,6 +80,6 @@ PRIVATE (authentication required)
 – POST /recommendations/:idRecommendation/comment
 – Write a comment for a recommendation
 – Body: – content
-– Return: url and confirmation
+– Return: confirmation
 
 – DELETE /recommendations/:idRecommendation
