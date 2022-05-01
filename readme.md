@@ -36,10 +36,9 @@ This project allows to manage advices and recommendations for travel experiences
     - creation_date
 
 ### Vote
-    - id
-    - score *
-    - recommendation_id *
     - user_id *
+    - recommendation_id *
+    - score *
     - creation_date
 
 ### Comment
