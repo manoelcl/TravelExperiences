@@ -129,4 +129,4 @@ This project allows to manage advices and recommendations for travel experiences
       - content
 - Return: confirmation
 
-- DELETE /recommendations/:idRecommendation
+### - DELETE /recommendations/:idRecommendation
