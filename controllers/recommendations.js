@@ -10,6 +10,7 @@ const {
   postRecommendation,
   voteRecommendation,
   commentRecommendation,
+  deleteRecommendationById,
 } = require("../db/recommendationsDB");
 
 //ALL RECOMMENDATIONS
@@ -125,9 +126,27 @@ const voteRecommendationController = async (req, res, next) => {
 //DELETE RECOMMENDATION
 const deleteRecommendationController = async (req, res, next) => {
   try {
+    //req.UserId
+    const { idRecommendation } = req.params;
+    const idUser = req.auth.id;
+    //Localizar el id
+
+    const recommendation = await getRecommendationByID(idRecommendation);
+
+    //Comprobar que el usuario del token es el mismo que lo ha creado
+
+    if (req.userId !== recommendation.user_id) {
+      throw generateError(
+        "No tienes permisos para borrar la recomendación",
+        401
+      );
+    }
+    //Borrar el tweet
+    await deleteRecommendationById(idRecommendation);
+
     res.send({
-      status: "error",
-      message: "Not implemented",
+      status: "ok",
+      message: `Recommendation with id : ${idRecommendation} deleted`,
     });
   } catch (error) {
     next(error);

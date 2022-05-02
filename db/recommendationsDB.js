@@ -126,10 +126,29 @@ const commentRecommendation = async (idUser, idRecommendation, content) => {
   }
 };
 
+const deleteRecommendationById = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    await connection.query(
+      `
+        DELETE FROM recommendation WHERE id = ?
+        `,
+      [id]
+    );
+    return;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 module.exports = {
   getRecommendationByID,
   listRecommendations,
   postRecommendation,
   voteRecommendation,
   commentRecommendation,
+  deleteRecommendationById,
 };
